@@ -12,9 +12,22 @@
 <script>
 function calculateContrast() {
   var contrast = document.getElementById("contrast").value;
-  var colorContrastValue = Math.ceil(((contrast - 1) / 20) * 1000);
+  var colorContrastValue = calculate_color_contrast(contrast);
   document.getElementById("result").innerHTML = "The color contrast value is: " + colorContrastValue;
 }
+
+function calculate_color_contrast(contrast) {
+  """Calculates the color contrast value based on the contrast against black.
+
+  Args:
+    contrast: The contrast against black.
+
+  Returns:
+    The color contrast value.
+  """
+
+  value = ((contrast - 1) / 20) * 1000
+  return math.ceil(value)
 </script>
 </body>
 </html>
