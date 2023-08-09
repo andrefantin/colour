@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Colour Contrast Calculator</title>
+    <title>Contrast Calculator</title>
 </head>
 <body>
-<h1>Colour Contrast Calculator</h1>
-<p>Enter the contrast against black:</p>
-<input type="text" id="contrast">
-<button onclick="calculateContrast()">Calculate</button>
-<p id="result"></p>
-<script>
-function calculateContrast() {
-  var contrast = document.getElementById("contrast").value;
-  var colorContrastValue = calculate_color_contrast(contrast);
-  document.getElementById("result").innerHTML = "The color contrast value is: " + colorContrastValue;
-}
+    <h1>Contrast Ratio Calculator</h1>
+    <input type="text" id="hexColor" placeholder="Enter HEX color value">
+    <button id="calculateButton">Calculate Contrast</button>
+    <div id="result"></div>
 
-function calculate_color_contrast(contrast) {
-  """Calculates the color contrast value based on the contrast against black.
-
-  Args:
-    contrast: The contrast against black.
-
-  Returns:
-    The color contrast value.
-  """
-
-  value = ((contrast - 1) / 20) * 1000
-  return math.ceil(value)
-</script>
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', () => {
+            const hexColor = document.getElementById('hexColor').value;
+            if (hexColor) {
+                fetch('calculate_contrast.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `hexColor=${encodeURIComponent(hexColor)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = `
+                        <p>Contrast ratio against black (#000000): ${data.contrastRatio.toFixed(2)}</p>
+                        <p>Value calculated: ${data.value}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
